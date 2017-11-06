@@ -224,7 +224,7 @@ open class DKImagePickerController : UINavigationController {
             }
         }
     }
-    
+
     public var selectedAssets = [DKAsset]()
     
     public convenience init() {
@@ -353,13 +353,13 @@ open class DKImagePickerController : UINavigationController {
                             if self.presentedViewController != nil {
                                 self.dismiss(animated: true, completion: nil)
                             }
-                            self.selectImage(DKAsset(originalAsset: newAsset))
+                            _ = self.selectImage(DKAsset(originalAsset: newAsset))
                         }
                     } else {
                         if self.sourceType != .camera {
                             self.dismiss(animated: true, completion: nil)
                         }
-                        self.selectImage(DKAsset(image: image))
+                        _ = self.selectImage(DKAsset(image: image))
                     }
                 })
                 
@@ -378,7 +378,7 @@ open class DKImagePickerController : UINavigationController {
                             if self.sourceType != .camera || self.viewControllers.count == 0 {
                                 self.dismiss(animated: true, completion: nil)
                             }
-                            self.selectImage(DKAsset(originalAsset: newAsset))
+                            _ = self.selectImage(DKAsset(originalAsset: newAsset))
                         }
                     } else {
                         self.dismiss(animated: true, completion: nil)
@@ -442,12 +442,14 @@ open class DKImagePickerController : UINavigationController {
         }
     }
     
-    internal func selectImage(_ asset: DKAsset) {
+    internal func selectImage(_ asset: DKAsset) -> Bool {
         if self.singleSelect {
             self.deselectAllAssets()
             self.selectedAssets.append(asset)
             self.done()
         } else {
+            if self.selectedAssets.contains(asset) { return false }
+
             self.selectedAssets.append(asset)
             if self.sourceType == .camera {
                 self.done()
@@ -455,6 +457,8 @@ open class DKImagePickerController : UINavigationController {
                 self.UIDelegate.imagePickerController(self, didSelectAssets: [asset])
             }
         }
+        
+        return true
     }
     
     internal func deselectImage(_ asset: DKAsset) {

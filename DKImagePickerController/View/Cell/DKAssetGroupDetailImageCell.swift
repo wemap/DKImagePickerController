@@ -21,6 +21,7 @@ class DKAssetGroupDetailImageCell: DKAssetGroupDetailBaseCell {
         self.thumbnailImageView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         self.contentView.addSubview(self.thumbnailImageView)
         
+        self.checkView.alpha = 0.0
         self.checkView.frame = self.bounds
         self.checkView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         self.checkView.checkImageView.tintColor = nil
@@ -90,8 +91,14 @@ class DKAssetGroupDetailImageCell: DKAssetGroupDetailBaseCell {
     
     override var isSelected: Bool {
         didSet {
-            checkView.isHidden = !super.isSelected
+            if isSelected == oldValue { return }
+
+            checkView.alpha = super.isSelected ? 0.0 : 1.0
+            UIView.animate(withDuration: 0.2,
+                           animations: {
+                            self.checkView.alpha = super.isSelected ? 1.0 : 0.0
+            })
         }
     }
-    
+
 } /* DKAssetGroupDetailCell */
